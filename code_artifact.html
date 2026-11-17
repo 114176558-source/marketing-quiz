@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>整合行銷管理師認證 - 題庫練習系統 (1-55題)</title>
+    <style>
+        :root {
+            /* 圖片指定配色 */
+            --color-ice-blue: #DDE6EB;
+            --color-lavender: #E4DAF6;
+            --color-blush-pink: #EED0E4;
+            --color-mist-teal: #B0D7DB;
+            --color-mint-aqua: #A4EADF;
+
+            /* 延伸與文字對比色 */
+            --text-dark: #2C3A47;
+            --text-muted: #596275;
+            --white: #FFFFFF;
+            --correct-bg: #d4f8f0;
+            --correct-border: #20bf6b;
+            --correct-text: #0b6e3b;
+            --wrong-bg: #fce4ec;
+            --wrong-border: #eb3b5a;
+            --wrong-text: #9b1c31;
+            --shadow: 0 8px 24px rgba(44, 58, 71, 0.08);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--color-ice-blue) 0%, var(--color-lavender) 50%, var(--color-blush-pink) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        /* 頂部導航與進度列 */
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            padding: 14px 20px;
+        }
+
+        .header-container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, var(--color-mist-teal), var(--color-mint-aqua));
+            color: var(--text-dark);
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .brand h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stats-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stat-pill {
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: var(--color-ice-blue);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-pill.correct { background: var(--color-mint-aqua); }
+        .stat-pill.wrong { background: var(--color-blush-pink); }
+
+        /* 主容器 */
+        .main-container {
+            max-width: 960px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        /* 模式切換與控制列 */
+        .control-panel {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mode-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+            background: var(--color-ice-blue);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(0.96);
+        }
+
+        .btn.active {
+            background: var(--color-mist-teal);
+            box-shadow: 0 4px 10px rgba(176, 215, 219, 0.5);
+        }
+
+        .btn-mint {
+            background: var(--color-mint-aqua);
+        }
+
+        .btn-pink {
+            background: var(--color-blush-pink);
+        }
+
+        .btn-lavender {
+            background: var(--color-lavender);
+        }
+
+        /* 進度條 */
+        .progress-wrapper {
+            width: 100%;
+            height: 8px;
+            background: var(--color-ice-blue);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-mist-teal), var(--color-mint-aqua));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* 題目卡片 */
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border-top: 6px solid var(--color-mist-teal);
+            transition: all 0.3s ease;
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .q-number {
+            background: var(--color-lavender);
+            color: var(--text-dark);
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+        }
+
+        .q-tag {
+            background: var(--color-ice-blue);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .bookmark-btn {
+            background: transparent;
+            border: 1.5px solid var(--color-blush-pink);
+            color: var(--text-dark);
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .bookmark-btn.bookmarked {
+            background: var(--color-blush-pink);
+        }
+
+        .q-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 22px;
+            line-height: 1.65;
+        }
+
+        /* 選項列表 */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 15px 18px;
+            border-radius: 12px;
+            background: var(--color-ice-blue);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.05rem;
+        }
+
+        .option-item:hover:not(.disabled) {
+            background: var(--color-lavender);
+            transform: translateX(4px);
+        }
+
+        .option-letter {
+            min-width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .option-item.selected {
+            border-color: var(--color-mist-teal);
+            background: #e9f5f6;
+        }
+
+        .option-item.correct {
+            background: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: var(--correct-text);
+        }
+
+        .option-item.correct .option-letter {
+            background: var(--correct-border);
+            color: var(--white);
+        }
+
+        .option-item.wrong {
+            background: var(--wrong-bg);
+            border-color: var(--wrong-border);
+            color: var(--wrong-text);
+        }
+
+        .option-item.wrong .option-letter {
+            background: var(--wrong-border);
+            color: var(--white);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+        }
+
+        /* 解析區塊 */
+        .explanation-box {
+            margin-top: 22px;
+            padding: 18px 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(228, 218, 246, 0.45), rgba(164, 234, 223, 0.35));
+            border-left: 5px solid var(--color-mist-teal);
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .exp-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dark);
+        }
+
+        .exp-answer-badge {
+            background: var(--color-mint-aqua);
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .exp-content {
+            font-size: 0.98rem;
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        /* 底部導航按鈕 */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+            gap: 12px;
+        }
+
+        .nav-footer .btn {
+            padding: 12px 22px;
+            font-size: 1rem;
+        }
+
+        /* 題號快速跳轉網格 */
+        .drawer-card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .drawer-title {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .legend {
+            display: flex;
+            gap: 12px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .q-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+            gap: 8px;
+        }
+
+        .grid-item {
+            height: 40px;
+            border-radius: 10px;
+            border: 1.5px solid var(--color-ice-blue);
+            background: var(--white);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .grid-item:hover {
+            background: var(--color-lavender);
+        }
+
+        .grid-item.current {
+            border: 2.5px solid var(--text-dark);
+            transform: scale(1.06);
+        }
+
+        .grid-item.answered-correct {
+            background: var(--color-mint-aqua);
+            border-color: var(--color-mint-aqua);
+        }
+
+        .grid-item.answered-wrong {
+            background: var(--color-blush-pink);
+            border-color: var(--color-blush-pink);
+        }
+
+        .grid-item.is-bookmarked::after {
+            content: "★";
+            position: absolute;
+            top: -4px;
+            right: 2px;
+            font-size: 0.65rem;
+            color: #e67e22;
+        }
+
+        /* 瀏覽全部模式下的樣式 */
+        .all-list-container .question-card {
+            margin-bottom: 24px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 手機版適配 */
+        @media (max-width: 640px) {
+            .brand h1 {
+                font-size: 1.05rem;
+            }
+            .question-card {
+                padding: 20px 16px;
+            }
+            .q-text {
+                font-size: 1.08rem;
+            }
+            .option-item {
+                padding: 12px 14px;
+                font-size: 0.98rem;
+            }
+            .nav-footer .btn {
+                padding: 10px 14px;
+                font-size: 0.92rem;
+            }
+            .stats-bar {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <div class="brand">
+            <span class="brand-badge">MATRIX 認證</span>
+            <h1>整合行銷管理師題庫 (第1篇 1-55題)</h1>
+        </div>
+        <div class="stats-bar">
+            <div class="stat-pill">進度: <span id="stat-progress">0/55</span></div>
+            <div class="stat-pill correct">答對: <span id="stat-correct">0</span></div>
+            <div class="stat-pill wrong">答錯: <span id="stat-wrong">0</span></div>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <!-- 控制列 -->
+    <div class="control-panel">
+        <div class="mode-tabs">
+            <button class="btn active" id="mode-single" onclick="setMode('single')">單題練習模式</button>
+            <button class="btn" id="mode-all" onclick="setMode('all')">全卷刷題模式</button>
+            <button class="btn" id="mode-wrong" onclick="setMode('wrong')">錯題複習 (<span id="wrong-count-btn">0</span>)</button>
+            <button class="btn" id="mode-bookmark" onclick="setMode('bookmark')">重點收藏 (<span id="bookmark-count-btn">0</span>)</button>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <button class="btn btn-lavender" id="toggle-all-exp-btn" onclick="toggleAllExplanations()" style="display:none;">展開/收合全部解析</button>
+            <button class="btn btn-pink" onclick="resetProgress()">重置紀錄</button>
+        </div>
+        <div class="progress-wrapper">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- 單題練習區 -->
+    <div id="single-view">
+        <div id="single-card-container"></div>
+    </div>
+
+    <!-- 全卷/篩選列表區 -->
+    <div id="list-view" class="all-list-container" style="display: none;"></div>
+
+    <!-- 題號快速跳轉卡 -->
+    <div class="drawer-card" id="navigator-drawer">
+        <div class="drawer-header">
+            <span class="drawer-title">題號快速跳轉導覽 (點擊題號切換)</span>
+            <div class="legend">
+                <span><i class="dot" style="background: var(--color-mint-aqua);"></i> 答對</span>
+                <span><i class="dot" style="background: var(--color-blush-pink);"></i> 答錯</span>
+                <span><i class="dot" style="background: #fff; border: 1px solid #ccc;"></i> 未作答</span>
+            </div>
+        </div>
+        <div class="q-grid" id="q-grid"></div>
+    </div>
+</div>
+
+<script>
+// 完整 1-55 題資料庫與詳細解析
+const quizData = [
+    {
+        id: 1,
+        topic: "行銷基本定義",
+        question: "以下對「行銷」的敘述何者為非？",
+        options: [
+            "英文為 marketing",
+            "中國大陸稱為營銷",
+            "行銷等同於銷售",
+            "美國行銷協會(American Marketing Association, AMA) 2013年將行銷定義為行銷就是創造、溝通、傳遞與交換對顧客、客戶、合作夥伴與整體社會有價值的活動、架構與流程。"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】行銷（Marketing）並不等同於銷售（Selling）。銷售僅是行銷職能中的一部分（著重於將既有產品推銷出去）；而現代行銷涵蓋市場調查、產品開發、定價、通路、推廣及顧客關係管理等完整價值創造流程。"
+    },
+    {
+        id: 2,
+        topic: "需要、慾求與需求",
+        question: "以下對需要(need)與需求(demand)的定義何者為是？",
+        options: [
+            "先有需求才會有需要",
+            "需求是人類與生俱來的生理或心理的特徵",
+            "需要是反映消費者的購買力",
+            "需求 = 需要 + 購買力"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】「需要（Need）」是人類與生俱來的基本匱乏感（如飢餓、安全感）；當需要受到文化與個性塑造後形成「慾求（Want）」；當慾求加上「購買力（購買意願與支付能力）」時，才轉化為「需求（Demand）」。因此：需求 = 需要（或慾求）+ 購買力。"
+    },
+    {
+        id: 3,
+        topic: "需要、慾求與需求",
+        question: "以下對需要(need)、慾求(want)與需求(demand)關係順序何者為是？",
+        options: [
+            "需要(need) → 慾求(want) → 需求(demand)",
+            "需要(need) → 需求(demand) → 慾求(want)",
+            "需求(demand) → 慾求(want) → 需要(need)",
+            "慾求(want) → 需要(need) → 需求(demand)"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】消費者行為的演進順序為：先有基本生理或心理的「需要（Need）」→ 經由社會文化與個人偏好形塑出特定物品的「慾求（Want）」→ 再具備足夠金錢與購買意願，成為市場上的有效「需求（Demand）」。"
+    },
+    {
+        id: 4,
+        topic: "需要、慾求與需求應用",
+        question: "小明已經存了6萬元想要去買一隻 iphone 16手機，小明是屬於下列哪一種消費特徵？",
+        options: [
+            "需要(need)",
+            "需求(demand)",
+            "慾求(want)",
+            "以上皆非"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】小明想要購買特定品牌「iPhone 16 手機」（慾求），且「已經存了 6 萬元」代表他同時具備了足夠的購買力，符合「慾求 + 購買力 = 需求（Demand）」的定義。"
+    },
+    {
+        id: 5,
+        topic: "需要、慾求與需求應用",
+        question: "小華目前正努力打工賺錢準備去購買一隻心儀的 iphone 16手機，小華是屬於下列哪一種消費特徵？",
+        options: [
+            "需要(need)",
+            "需求(demand)",
+            "慾求(want)",
+            "以上皆非"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】小華鎖定了特定商品「心儀的 iPhone 16 手機」，但「正努力打工賺錢準備」表示目前尚未具備足夠的購買力，因此仍停留在「慾求（Want）」階段，尚未成為有效需求（Demand）。"
+    },
+    {
+        id: 6,
+        topic: "市場評估與需求判斷",
+        question: "某鞋商想到非洲土著區開發新市場，發覺土著都沒穿鞋子而且沒有經濟能力買鞋，就悻悻然打道回府放棄非洲市場，請問鞋商為何會選擇放棄市場，是因為發覺非洲土著市場？",
+        options: [
+            "有需要沒需求",
+            "有需求沒需要",
+            "有需要沒慾求",
+            "有需求沒慾求"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】土著沒穿鞋子，代表客觀生理上保護雙腳的「需要（Need）」存在；但「沒有經濟能力買鞋」代表缺乏購買力，無法構成「需求（Demand）」，因此該市場屬於「有需要沒需求」。"
+    },
+    {
+        id: 7,
+        topic: "市場評估與需求判斷",
+        question: "某鞋商想到非洲土著區開發新市場，看到土著都沒穿鞋，很高興潛在市場很大，決定留下經營賣鞋的生意，請問鞋商為何會選擇開發這個市場？",
+        options: [
+            "發覺市場有需要",
+            "發覺市場有慾求",
+            "發覺市場有需求",
+            "以上皆非"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】經典行銷故事中，另一位鞋商看到大家沒穿鞋，認為人人都缺乏保護腳部的基本功能，代表發覺了龐大的潛在「需要（Need）」，可透過教育市場與設計平價產品將需要轉化為需求。"
+    },
+    {
+        id: 8,
+        topic: "市場評估與需求判斷",
+        question: "下列敘述何者正確？",
+        options: [
+            "一般商人最希望看到有需要的市場",
+            "一般商人最希望看到有需求的市場",
+            "一般商人最希望看到有慾求的市場",
+            "以上皆是"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】企業要能獲利與生存，消費者必須既有購買意願又有實際支付能力，也就是「需求（Demand）」。有需要或慾求若無購買力，企業仍無法實現銷售營收。"
+    },
+    {
+        id: 9,
+        topic: "交換概念",
+        question: "以下對交換(exchange)的說明何者為非？",
+        options: [
+            "所有的產品與服務的買賣都屬交換行為",
+            "擔任 NPO 志工也是屬於交換行為",
+            "交換一定要有對應的價格",
+            "交換的代價可以是金錢、勞務、時間"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】行銷的核心概念是「交換（Exchange）」，是指透過提供某種東西作為回報，從他人處取得所需物品的行為。交換不一定要有貨幣「價格」，其代價可以是金錢、時間、勞務、精神滿足（如擔任 NPO 志工獲得自我實現）等。"
+    },
+    {
+        id: 10,
+        topic: "行銷觀念演進層次",
+        question: "以下敘述何者正確？",
+        options: [
+            "顧客導向 < 消費者導向 < 市場導向 < 社會行銷導向 < 行銷導向",
+            "消費者導向 < 顧客導向 < 市場導向 < 行銷導向 < 社會行銷導向",
+            "顧客導向 < 消費者導向 < 市場導向 < 行銷導向 < 社會行銷導向",
+            "顧客導向 < 消費者導向 < 行銷導向 < 市場導向 < 社會行銷導向"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】就涵蓋範疇由小到大排列：顧客導向（僅關注直接購買者） < 消費者導向（關注最終使用者） < 市場導向（關注消費者＋競爭者＋通路等整體市場環境） < 行銷導向（整合企業內外部資源滿足市場） < 社會行銷導向（兼顧消費者、企業利潤與社會整體長期福祉）。"
+    },
+    {
+        id: 11,
+        topic: "行銷 1.0 至 4.0 演進",
+        question: "以下敘述何者為是？",
+        options: [
+            "行銷2.0時代，以消費者為王",
+            "行銷3.0時代，以社會共同價值為王",
+            "行銷4.0時代，以數位為核心",
+            "以上皆是"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】科特勒（Philip Kotler）提出的行銷演進：行銷 1.0 以產品為中心；行銷 2.0 以消費者為王（重視顧客滿意與差異化）；行銷 3.0 以價值觀與社會共同價值為王（身心靈與企業社會責任）；行銷 4.0 則進入虛實整合與以數位科技為核心的時代。"
+    },
+    {
+        id: 12,
+        topic: "行銷 4.0 導向",
+        question: "行銷4.0時代，是屬於哪種導向的時代？",
+        options: [
+            "生產導向",
+            "銷售導向",
+            "顧客導向",
+            "社會行銷導向"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】行銷 3.0 與 4.0 皆建立在「社會行銷導向（Societal Marketing Orientation）」的基礎上，強調企業在運用數位轉型與全通路行銷時，仍須關注人類福祉、環境永續與社會共好。"
+    },
+    {
+        id: 13,
+        topic: "行銷學經典著作",
+        question: "《行銷5.0》一書的作者是誰？",
+        options: [
+            "彼得杜拉克(Peter Ferdinand Drucker)等",
+            "麥可波特(Michael Eugene Porter)等",
+            "菲利浦科特勒(Philip Kotler)等",
+            "大衛・艾克(David A. Aaker)等"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】《行銷 5.0：科技與人性完美融合的全方位戰略》（Marketing 5.0: Technology for Humanity）是由現代行銷學之父菲利浦·科特勒（Philip Kotler）與陳就學（Hermawan Kartajaya）、伊萬·塞提亞萬（Iwan Setiawan）共同合著。"
+    },
+    {
+        id: 14,
+        topic: "經營導向判斷",
+        question: "近來台灣食品業發生食安危機，此乃說明這些嚴重違反食安標準的廠商不具備哪一種經營導向？",
+        options: [
+            "銷售導向",
+            "消費者導向",
+            "行銷導向",
+            "社會行銷導向"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】「社會行銷導向」強調企業在追求自身利潤與滿足顧客慾望的同時，必須維護消費者與社會大眾的長期健康與福祉。黑心食安廠商為降低成本而危害民眾健康，正是嚴重缺乏社會行銷導向。"
+    },
+    {
+        id: 15,
+        topic: "行銷學代表人物",
+        question: "下列何者有「現代行銷學之父」的稱號？",
+        options: [
+            "彼得杜拉克(Peter Ferdinand Drucker)",
+            "麥可波特(Michael Eugene Porter)",
+            "菲利浦科特勒(Philip Kotler)",
+            "大衛・艾克(David A. Aaker)"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】菲利浦·科特勒（Philip Kotler）是美國西北大學凱洛格管理學院教授，被譽為「現代行銷學之父」。(A)彼得杜拉克為現代管理學之父；(B)麥可波特為競爭策略之父；(D)大衛艾克為品牌資產大師。"
+    },
+    {
+        id: 16,
+        topic: "經營導向實例",
+        question: "華碩廣告標語「華碩品質、堅若磐石」，是強調該品牌哪一種經營導向？",
+        options: [
+            "產品導向",
+            "銷售導向",
+            "顧客導向",
+            "社會行銷導向"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】「產品導向（Product Orientation）」認為消費者最喜歡高品質、高性能與具創新特色的產品，因此企業專注於持續改良產品品質。「華碩品質、堅若磐石」即為典型的產品導向訴求。"
+    },
+    {
+        id: 17,
+        topic: "經營導向實例",
+        question: "中華航空廣告標語「華航以客為尊」，是強調該品牌哪一個經營導向？",
+        options: [
+            "生產導向",
+            "銷售導向",
+            "消費者導向",
+            "社會行銷導向"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】「以客為尊」代表將旅客的需求、體驗與滿意度放在首位，屬於「消費者導向（顧客導向）」的經營哲學。"
+    },
+    {
+        id: 18,
+        topic: "經營導向實例",
+        question: "家樂福廣告標語「天天都便宜」，是強調該品牌哪一個經營導向？",
+        options: [
+            "生產導向",
+            "銷售導向",
+            "顧客導向",
+            "社會行銷導向"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】「天天都便宜」透過低價促銷與價格吸引力來刺激大量購買與衝高營業額，符合「銷售導向（Selling Orientation）」透過強力推銷與價格手段刺激買氣的特徵。"
+    },
+    {
+        id: 19,
+        topic: "經營導向實例",
+        question: "Nike 廣告標語「Just Do It」，是強調該品牌哪一個經營導向？",
+        options: [
+            "生產導向",
+            "銷售導向",
+            "消費者導向",
+            "社會行銷導向"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】「Just Do It」並未直接推銷鞋子機能，而是洞察消費者渴望突破自我、追求運動精神的心理需求，與消費者產生情感共鳴，屬於「消費者導向」。"
+    },
+    {
+        id: 20,
+        topic: "經營導向實例",
+        question: "帝亞吉歐(DIAGEO)之 Johnnie walker 自2003年起在台灣積極推動「KEEP WALKING 夢想資助計畫」，是強調該品牌哪一個經營導向？",
+        options: [
+            "生產導向",
+            "銷售導向",
+            "顧客導向",
+            "社會行銷導向"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】該計畫長期資助台灣各領域逐夢者實踐對社會有益的夢想，將品牌精神與社會公益、正向價值結合，屬於「社會行銷導向」。"
+    },
+    {
+        id: 21,
+        topic: "社會行銷範疇",
+        question: "下列哪一個非屬「社會行銷」範疇？",
+        options: [
+            "善因行銷",
+            "紅色行銷",
+            "橘色行銷",
+            "綠色行銷"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】「橘色行銷（橘色商機）」是指針對 50 歲以上熟齡銀髮族所進行的目標市場行銷，並非以公益或環保為目的的社會行銷。而善因行銷、紅色行銷（如 Product RED 抗愛滋公益）、綠色行銷（環保永續）皆屬社會行銷範疇。"
+    },
+    {
+        id: 22,
+        topic: "社會行銷範疇",
+        question: "下列何者屬「社會行銷」範疇？",
+        options: [
+            "善因行銷",
+            "紅色行銷",
+            "綠色行銷",
+            "以上皆是"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】善因行銷（結合公益捐助）、紅色行銷（如 Apple 等企業與 RED 組織合作捐助全球抗愛滋基金）、綠色行銷（環境保護與永續發展）皆兼顧社會福祉，均屬於社會行銷的範疇。"
+    },
+    {
+        id: 23,
+        topic: "善因行銷實例",
+        question: "P&G 長期推動「六分鐘護一生」防治子宮頸癌是屬於何種行銷範疇？",
+        options: [
+            "綠色行銷",
+            "善因行銷",
+            "運動行銷",
+            "病毒式行銷"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】「善因行銷（Cause-Related Marketing）」是企業將產品銷售或品牌推廣與特定社會公益議題（如婦女健康、防治子宮頸癌）相結合，提升品牌形象同時促進社會公益。"
+    },
+    {
+        id: 24,
+        topic: "綠色行銷實例",
+        question: "麥當勞和星巴克愈來愈重視管控原物料的來源不能來自破壞雨林生產的農作物，此乃屬於何種行銷範疇？",
+        options: [
+            "綠色行銷",
+            "橘色行銷",
+            "紅色行銷",
+            "病毒式行銷"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】「綠色行銷（Green Marketing）」強調在產品生產、原物料採購、包裝到消費過程中，減少對自然生態環境的破壞，達成環境永續發展。"
+    },
+    {
+        id: 25,
+        topic: "社會行銷核心三要素",
+        question: "「社會行銷」的觀念是同時考量滿足哪三個對象？",
+        options: [
+            "消費者 / 企業 / 社會",
+            "消費者 / 政府 / 社會",
+            "消費者 / 員工 / 社會",
+            "消費者 / 媒體 / 社會"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】根據科特勒的定義，社會行銷觀念要求行銷人員在制定策略時，必須在「企業利潤」、「消費者需求滿足」以及「社會公共利益」這三者之間取得平衡。"
+    },
+    {
+        id: 26,
+        topic: "社會行銷綜合應用",
+        question: "可口可樂推出北極熊圖案限量瓶包裝，消費者購買限量瓶可樂就捐助世界自然基金會 WWF (World Wildlife Fund)，此乃屬？",
+        options: [
+            "綠色行銷",
+            "社會行銷",
+            "善因行銷",
+            "以上皆是"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】此活動保護北極熊生態環境（綠色行銷），透過購買商品提撥捐款給公益組織 WWF（善因行銷），而這兩者皆隸屬於大範疇的「社會行銷」，故選(D)以上皆是。"
+    },
+    {
+        id: 27,
+        topic: "公益與社群行銷應用",
+        question: "由美國ALS「肌肉萎縮性側索硬化症(俗稱漸凍人症)」協會所發起的「冰桶挑戰」(Ice Bucket Challenge)在全球引發熱潮，此乃屬？",
+        options: [
+            "代言人行銷",
+            "社群病毒行銷",
+            "善因行銷",
+            "以上皆是"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】冰桶挑戰透過名人接力參與（代言人行銷）、在社群媒體上幾何級數快速擴散（社群病毒行銷），最終成功為漸凍人協會募款並提升大眾認知（善因行銷），因此以上皆是。"
+    },
+    {
+        id: 28,
+        topic: "綠色與社會行銷應用",
+        question: "2006年起麥當勞承諾，停止出售用亞馬遜森林地區出產的大豆所飼養的牲畜做食品，與綠色和平組織一起保護亞馬遜雨林，此乃屬？",
+        options: [
+            "綠色行銷",
+            "善因行銷",
+            "社會行銷",
+            "以上皆是"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】保護雨林生態屬於「綠色行銷」，與非營利組織綠色和平合作推動環保公益議題屬於「善因行銷」，整體符合「社會行銷」精神，故選(D)。"
+    },
+    {
+        id: 29,
+        topic: "紅色行銷應用",
+        question: "全球知名廠商(Apple、美國運通)近來紛紛推出紅色系列商品，將紅色外觀產品銷售金額提撥部份比例捐助給公益組織。此乃屬？",
+        options: [
+            "紅色行銷",
+            "善因行銷",
+            "社會行銷",
+            "以上皆是"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】結合紅色主題商品捐助公益（紅色行銷），透過消費行為提撥善款（善因行銷），兼顧商業與社會福祉（社會行銷），因此以上皆是。"
+    },
+    {
+        id: 30,
+        topic: "八大需求狀態與行銷任務",
+        question: "行銷人面對因季節、離尖峰所導致過度供給或需求的波動，應該採取何種行銷策略？",
+        options: [
+            "反行銷",
+            "重新行銷",
+            "規則行銷",
+            "維持行銷"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】面對「不規則需求（Irregular Demand）」（如淡旺季、平日與假日、離尖峰時段的需求波動），行銷任務為「規則行銷（Synchromarketing）」，透過彈性定價（如離峰優惠）或促銷來平滑需求波動。"
+    },
+    {
+        id: 31,
+        topic: "八大需求狀態與行銷任務",
+        question: "某連鎖速食店發覺市場供需已經達到飽和，其該採取何種行銷策略？",
+        options: [
+            "刺激行銷",
+            "重新行銷",
+            "開發行銷",
+            "維持行銷"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】當市場處於「充分需求（Full Demand）」（供需達到飽和與平衡）時，企業應採取「維持行銷（Maintenance Marketing）」，持續維持產品品質與顧客滿意度，防範競爭者搶食市場。"
+    },
+    {
+        id: 32,
+        topic: "八大需求狀態與行銷任務",
+        question: "台南某文創百貨假日人潮過多，為了維護服務品質，進行入館人數的流量管制，此乃屬於哪一種行銷策略？",
+        options: [
+            "低行銷",
+            "反行銷",
+            "規則行銷",
+            "維持行銷"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】面對「超額需求（Overfull Demand）」（人潮超過負荷），行銷任務是「低行銷（Demarketing，又稱降低行銷）」，目的是暫時或永久性地減少需求（如限流、提高價格），而非完全消滅需求。"
+    },
+    {
+        id: 33,
+        topic: "八大需求狀態與行銷任務",
+        question: "政府有鑑於酒駕肇事嚴重危及社會民眾安全，對酒駕加強取締、加重刑責，此乃屬於哪一種行銷策略？",
+        options: [
+            "低行銷",
+            "反行銷",
+            "規則行銷",
+            "維持行銷"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】面對「有害需求（Unwholesome Demand）」（如酒駕、菸毒、賭博），行銷任務是「反行銷（Countermarketing）」，旨在徹底消除、遏止該項危害社會的不良行為。"
+    },
+    {
+        id: 34,
+        topic: "八大需求狀態與行銷任務",
+        question: "某博物館舉辦特展吸引超額人潮參觀，為了維護服務品質，博物館進行流量管制，此乃屬於哪一種行銷策略？",
+        options: [
+            "低行銷",
+            "反行銷",
+            "規則行銷",
+            "維持行銷"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】與第 32 題相同，因人潮超過場館承載力（超額需求），採取管制措施以維持參觀品質，屬於「低行銷（Demarketing）」。"
+    },
+    {
+        id: 35,
+        topic: "八大需求狀態與行銷任務",
+        question: "某美白化妝品，到歐美開拓市場，發覺大多數歐美白人沒有美白需求，進而改變訴求推護膚保養化妝品，此乃屬於哪一種行銷策略？",
+        options: [
+            "轉換行銷",
+            "刺激行銷",
+            "開發行銷",
+            "維持行銷"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】面對「無需求（No Demand）」（消費者對產品漠不關心或無興趣）時，行銷任務是「刺激行銷（Stimulational Marketing）」，透過改變產品利益訴求，將產品與消費者的既有需求連結起來。"
+    },
+    {
+        id: 36,
+        topic: "八大需求狀態與行銷任務",
+        question: "烘焙業推廣母親節買蛋糕慶祝，改變一般人的節慶消費習慣，此乃屬於哪一種行銷策略？",
+        options: [
+            "轉換行銷",
+            "刺激行銷",
+            "開發行銷",
+            "維持行銷"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】原本消費者在母親節並沒有買蛋糕的習慣（無需求狀態），業者透過創造節慶儀式感來激發買氣，屬於「刺激行銷（Stimulational Marketing）」。"
+    },
+    {
+        id: 37,
+        topic: "八大需求狀態與行銷任務",
+        question: "食品業結合零售業將巧克力推廣為情人節代表性的禮品，此乃屬於哪一種行銷策略？",
+        options: [
+            "轉換行銷",
+            "刺激行銷",
+            "開發行銷",
+            "維持行銷"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】將原本平淡的巧克力與情人節送禮文化連結，從無到有創造消費需求，屬於「刺激行銷（Stimulational Marketing）」。"
+    },
+    {
+        id: 38,
+        topic: "八大需求狀態與行銷任務",
+        question: "「橘色商機」指50歲以上熟齡人口，其人生像進入秋天燦爛的楓葉般，這個年齡層的人口特徵是：有錢、空巢期、消費意願高、敢嘗新、善待自己；針對階層人口推廣保健商品、深度旅遊、高階網購……，此乃屬於哪一種行銷策略？",
+        options: [
+            "轉換行銷",
+            "刺激行銷",
+            "開發行銷",
+            "維持行銷"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】針對尚未被充分滿足的「潛在需求（Latent Demand）」（熟齡族有錢有閒渴望高品質生活，但過去市場缺乏專屬商品），研發新產品與服務來滿足他們，屬於「開發行銷（Developmental Marketing）」。"
+    },
+    {
+        id: 39,
+        topic: "八大需求狀態與行銷任務",
+        question: "愛之味鮮採番茄汁利用先進技術改變配方，讓番茄汁變好喝了，此乃屬於哪一種行銷策略？",
+        options: [
+            "轉換行銷",
+            "刺激行銷",
+            "開發行銷",
+            "維持行銷"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】許多消費者原本排斥番茄汁的生澀草腥味，屬於「負需求（Negative Demand）」（消費者討厭甚至願意花錢避開該產品）。透過改良配方扭轉消費者的排斥態度，屬於「轉換行銷（Conversional Marketing）」。"
+    },
+    {
+        id: 40,
+        topic: "八大需求狀態與行銷任務",
+        question: "Gummy Bears 推出兒童維他命軟糖，讓排斥藥味的小朋友願意吃維他命，此乃屬於哪一種行銷策略？",
+        options: [
+            "轉換行銷",
+            "刺激行銷",
+            "開發行銷",
+            "維持行銷"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】小朋友原本排斥吃維他命藥錠（負需求），業者將其改造成香甜的軟糖形式，成功將負面排斥轉化為正面接受，屬於「轉換行銷（Conversional Marketing）」。"
+    },
+    {
+        id: 41,
+        topic: "八大需求狀態與行銷任務",
+        question: "政府強力取締毒品，此乃屬於哪一種行銷策略？",
+        options: [
+            "轉換行銷",
+            "低行銷",
+            "反行銷",
+            "維持行銷"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】毒品屬於嚴重危害個人與社會的「有害需求（Unwholesome Demand）」，政府透過法律強力取締以徹底消滅需求，屬於「反行銷（Countermarketing）」。"
+    },
+    {
+        id: 42,
+        topic: "市場哲學演進",
+        question: "以下對市場哲學的演進敘述何者為非？",
+        options: [
+            "起始於生產觀念",
+            "銷售觀念在於雙贏",
+            "行銷觀念在於滿足消費者需求",
+            "現在強調社會行銷觀念"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】「銷售觀念（Selling Concept）」的出發點是工廠與既有產品，透過強力推銷賺取短期利潤，屬於「你輸我贏」的零和博弈；「行銷觀念」才強調透過滿足顧客需求創造雙贏。"
+    },
+    {
+        id: 43,
+        topic: "代工模式與市場哲學",
+        question: "OEM (Original Equipment Manufacturer)廠商是屬於下列哪一種市場哲學的演進觀念？",
+        options: [
+            "生產觀念",
+            "銷售觀念",
+            "行銷觀念",
+            "社會行銷觀念"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】OEM（原廠委託製造，純代工）專注於提升製造效率、大量標準化生產與降低製造成本，完全符合「生產觀念（Production Concept）」的核心精神。"
+    },
+    {
+        id: 44,
+        topic: "代工模式與市場哲學",
+        question: "ODM (Original Design Manufacturer)廠商是屬於下列哪一種市場哲學的演進觀念？",
+        options: [
+            "生產觀念",
+            "產品觀念",
+            "銷售觀念",
+            "行銷觀念"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】ODM（原廠委託設計代工）具備研發與設計能力，注重產品品質、功能創新與技術規格的提升，符合「產品觀念（Product Concept）」的特徵。"
+    },
+    {
+        id: 45,
+        topic: "品牌經營與市場哲學",
+        question: "OBM (Own Branding & Manufacturing)廠商是屬於下列哪一種市場哲學的演進觀念？",
+        options: [
+            "生產觀念",
+            "產品觀念",
+            "銷售觀念",
+            "行銷觀念"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】OBM（自有品牌與製造）必須直接面對終端市場，從市場調查、顧客需求洞察、品牌定位到整合行銷溝通全盤掌握，屬於「行銷觀念（Marketing Concept）」。"
+    },
+    {
+        id: 46,
+        topic: "生產觀念特徵",
+        question: "以下對市場哲學的演進中「生產觀念」的敘述何者為非？",
+        options: [
+            "規模經濟",
+            "標準化生產",
+            "大量生產",
+            "重品質"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】「生產觀念」強調大量生產、標準化作業以達成規模經濟與低成本（讓消費者買得起、買得到）；而「重品質、重性能創新」則是下一階段「產品觀念」的重點。"
+    },
+    {
+        id: 47,
+        topic: "銷售觀念 vs 行銷觀念",
+        question: "以下對「銷售觀念」與「行銷觀念」的敘述何者為非？",
+        options: [
+            "銷售起始點在產品生產之後",
+            "行銷焦點在產品本身",
+            "行銷重心在市場",
+            "行銷比銷售更重視顧客關係"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】「銷售觀念」的焦點才是放在「既有產品本身」（想辦法把做出來的產品賣掉）；而「行銷觀念」的焦點則是在「顧客需求（Customer Needs）」。"
+    },
+    {
+        id: 48,
+        topic: "銷售觀念 vs 行銷觀念",
+        question: "以下對「銷售觀念」與「行銷觀念」的敘述何者為非？",
+        options: [
+            "行銷起始點在產品生產之後",
+            "銷售焦點在產品本身",
+            "銷售重心在工廠",
+            "行銷手段在整合行銷"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】「行銷觀念」的起始點是在「產品生產之前」（先進行市場調查、確認目標市場與顧客需求，再設計生產產品）；在產品生產之後才開始想辦法賣出的是「銷售觀念」。"
+    },
+    {
+        id: 49,
+        topic: "銷售觀念 vs 行銷觀念",
+        question: "以下對「銷售觀念」與「行銷觀念」的敘述何者為非？",
+        options: [
+            "行銷起始點在產品生產之前",
+            "銷售手段在推廣",
+            "銷售關鍵技術在需求界定",
+            "行銷利潤在顧客滿足"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】「銷售觀念」的關鍵技術在於「推銷與說服技巧」；而「需求界定（市場區隔與顧客洞察）」則是「行銷觀念」的關鍵技術。"
+    },
+    {
+        id: 50,
+        topic: "銷售觀念 vs 行銷觀念",
+        question: "以下對「銷售觀念」與「行銷觀念」的敘述何者為非？",
+        options: [
+            "行銷強調重複交換",
+            "銷售利害關係在你輸我贏",
+            "銷售關鍵技術在銷售技巧",
+            "銷售比行銷更重視顧客關係"
+        ],
+        answer: 3, // D
+        explanation: "【本題選 (D)】銷售觀念著重單次交易成交（一錘子買賣），較忽略售後關係；「行銷觀念」才重視長期顧客關係管理（CRM）與顧客終身價值，追求重複交換。"
+    },
+    {
+        id: 51,
+        topic: "行銷遠視症 vs 近視症",
+        question: "菲利普·科特勒(Kotler Philip)及辛赫(Ravi Singh)提出「企業經理人只在乎顧客需求，卻忽視了產品品質的重要性。」是指企業主對行銷有？",
+        options: [
+            "行銷遠視症",
+            "行銷近視",
+            "行銷大頭症",
+            "行銷偏視症"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】科特勒與辛赫提出的「行銷遠視症（Marketing Hyperopia）」，是指過度聚焦於遠方的市場趨勢與顧客表面需求，卻忽略了眼前最根本的「產品品質與核心技術」。"
+    },
+    {
+        id: 52,
+        topic: "行銷近視症實例",
+        question: "台灣很多地方將當地特色的農產品，在未瞭解消費者的需求之下，一味地衍生成各種加工商品，並未因此而熱賣，此可謂患了？",
+        options: [
+            "行銷近視症",
+            "行銷遠視症",
+            "行銷大頭症",
+            "行銷偏視症"
+        ],
+        answer: 0, // A
+        explanation: "【本題選 (A)】農會或地方廠商只看到自己手上有什麼農產品（產品導向思維），卻未深入了解消費者真正想要什麼利益與需求，導致產品滯銷，正是典型的「行銷近視症（Marketing Myopia）」。"
+    },
+    {
+        id: 53,
+        topic: "行銷近視症定義",
+        question: "行銷大師李維特(Theodore Levitt)提出「企業經理人僅重視當前的產品本身的議題，卻忽略顧客需求及其所追求的利益」，此稱之為？",
+        options: [
+            "行銷遠視症(marketing hyperopia)",
+            "行銷近視症(marketing myopia)",
+            "行銷 2.0",
+            "行銷 3.0"
+        ],
+        answer: 1, // B
+        explanation: "【本題選 (B)】哈佛商學院教授李維特（Theodore Levitt）於 1960 年提出著名的「行銷近視症（Marketing Myopia）」，指出企業若將自身定義在狹隘的「產品」而非滿足「顧客根本需求」（例如鐵路公司以為自己在做火車生意，而非運輸生意），終將被市場淘汰。"
+    },
+    {
+        id: 54,
+        topic: "行銷創造的效用",
+        question: "請問下列何者不屬於行銷可為消費者所創造的效用？",
+        options: [
+            "地點效用",
+            "資訊效用",
+            "價格效用",
+            "時間效用"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】行銷主要為消費者創造的四大效用為：形式效用（Form Utility，由生產/行銷共同塑造）、時間效用（Time Utility）、地點效用（Place Utility）、持有/所有權效用（Possession Utility），部分學者亦納入「資訊效用（Information Utility）」。「價格效用」並非行銷學定義的效用類別。"
+    },
+    {
+        id: 55,
+        topic: "行銷核心觀念",
+        question: "以下對行銷概念的敘述何者為非？",
+        options: [
+            "行銷管理亦可稱為顧客管理與需求管理",
+            "差異化與市場定位是行銷管理重要的議題",
+            "行銷可以創造顧客的需要",
+            "顧客關係的建立基礎在顧客價值與滿意度"
+        ],
+        answer: 2, // C
+        explanation: "【本題選 (C)】行銷「不能」創造人類與生俱來的「需要（Need）」（如飢餓、安全感是人性本能）；行銷所能做的是影響消費者的「慾求（Want）」，並將其引導轉化為對特定品牌的「需求（Demand）」。"
+    }
+];
+
+// 狀態管理
+let state = {
+    mode: 'single', // 'single', 'all', 'wrong', 'bookmark'
+    currentIndex: 0,
+    userAnswers: {}, // { questionId: selectedOptionIndex }
+    bookmarks: [],   // [questionId, ...]
+    showAllExp: false
+};
+
+const STORAGE_KEY = 'integrated_marketing_quiz_v1';
+const letters = ['A', 'B', 'C', 'D'];
+
+// 初始化載入本地紀錄
+function loadState() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            state.userAnswers = parsed.userAnswers || {};
+            state.bookmarks = parsed.bookmarks || [];
+            state.currentIndex = parsed.currentIndex || 0;
+        }
+    } catch (e) {
+        console.error("讀取紀錄失敗", e);
+    }
+}
+
+function saveState() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            userAnswers: state.userAnswers,
+            bookmarks: state.bookmarks,
+            currentIndex: state.currentIndex
+        }));
+    } catch (e) {
+        console.error("儲存紀錄失敗", e);
+    }
+}
+
+// 更新頂部數據統計與進度條
+function updateStats() {
+    const total = quizData.length;
+    const answeredIds = Object.keys(state.userAnswers).map(Number);
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    answeredIds.forEach(id => {
+        const q = quizData.find(item => item.id === id);
+        if (q) {
+            if (state.userAnswers[id] === q.answer) {
+                correctCount++;
+            } else {
+                wrongCount++;
+            }
+        }
+    });
+
+    document.getElementById('stat-progress').textContent = `${answeredIds.length}/${total}`;
+    document.getElementById('stat-correct').textContent = correctCount;
+    document.getElementById('stat-wrong').textContent = wrongCount;
+    document.getElementById('wrong-count-btn').textContent = wrongCount;
+    document.getElementById('bookmark-count-btn').textContent = state.bookmarks.length;
+
+    const pct = Math.round((answeredIds.length / total) * 100);
+    document.getElementById('progress-fill').style.width = `${pct}%`;
+
+    renderNavigatorGrid();
+}
+
+// 切換模式
+function setMode(newMode) {
+    state.mode = newMode;
+    document.querySelectorAll('.mode-tabs .btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`mode-${newMode}`).classList.add('active');
+
+    const singleView = document.getElementById('single-view');
+    const listView = document.getElementById('list-view');
+    const toggleExpBtn = document.getElementById('toggle-all-exp-btn');
+    const drawer = document.getElementById('navigator-drawer');
+
+    if (newMode === 'single') {
+        singleView.style.display = 'block';
+        listView.style.display = 'none';
+        toggleExpBtn.style.display = 'none';
+        drawer.style.display = 'block';
+        renderSingleQuestion();
+    } else {
+        singleView.style.display = 'none';
+        listView.style.display = 'block';
+        toggleExpBtn.style.display = 'inline-flex';
+        drawer.style.display = 'none';
+        renderListQuestions();
+    }
+}
+
+// 產生單張題目卡片 HTML
+function createQuestionCardHTML(q, isSingleMode) {
+    const userAns = state.userAnswers[q.id];
+    const isAnswered = userAns !== undefined;
+    const isBookmarked = state.bookmarks.includes(q.id);
+
+    const optionsHTML = q.options.map((optText, idx) => {
+        let extraClass = '';
+        if (isAnswered) {
+            extraClass += ' disabled';
+            if (idx === q.answer) {
+                extraClass += ' correct';
+            } else if (idx === userAns && userAns !== q.answer) {
+                extraClass += ' wrong';
+            }
+        }
+        return `
+            <div class="option-item ${extraClass}" onclick="handleSelectOption(${q.id}, ${idx})">
+                <div class="option-letter">${letters[idx]}</div>
+                <div class="option-text">${optText}</div>
+            </div>
+        `;
+    }).join('');
+
+    const showExp = isAnswered || (!isSingleMode && state.showAllExp);
+    const statusIcon = isAnswered
+        ? (userAns === q.answer ? '✅ 答對了！' : '❌ 答錯了！')
+        : '💡 題目解析';
+
+    return `
+        <div class="question-card" id="q-card-${q.id}">
+            <div class="q-header">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span class="q-number">第 ${q.id} 題 / 共 55 題</span>
+                    <span class="q-tag"># ${q.topic}</span>
+                </div>
+                <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark(${q.id})">
+                    ${isBookmarked ? '★ 已收藏' : '☆ 收藏此題'}
+                </button>
+            </div>
+            <div class="q-text">${q.question}</div>
+            <div class="options-list">
+                ${optionsHTML}
+            </div>
+            <div class="explanation-box ${showExp ? 'show' : ''}" id="exp-${q.id}">
+                <div class="exp-title">
+                    <span>${statusIcon}</span>
+                    <span class="exp-answer-badge">正確答案：(${letters[q.answer]})</span>
+                </div>
+                <div class="exp-content">${q.explanation}</div>
+            </div>
+            ${isSingleMode ? `
+            <div class="nav-footer">
+                <button class="btn" onclick="prevQuestion()" ${state.currentIndex === 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>← 上一題</button>
+                <button class="btn btn-lavender" onclick="toggleSingleExp(${q.id})">查看/隱藏解析</button>
+                <button class="btn btn-mint" onclick="nextQuestion()" ${state.currentIndex === quizData.length - 1 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>下一題 →</button>
+            </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+// 渲染單題模式
+function renderSingleQuestion() {
+    const container = document.getElementById('single-card-container');
+    const q = quizData[state.currentIndex];
+    container.innerHTML = createQuestionCardHTML(q, true);
+    renderNavigatorGrid();
+}
+
+// 渲染列表模式（全卷 / 錯題 / 收藏）
+function renderListQuestions() {
+    const container = document.getElementById('list-view');
+    let filtered = quizData;
+
+    if (state.mode === 'wrong') {
+        filtered = quizData.filter(q => state.userAnswers[q.id] !== undefined && state.userAnswers[q.id] !== q.answer);
+    } else if (state.mode === 'bookmark') {
+        filtered = quizData.filter(q => state.bookmarks.includes(q.id));
+    }
+
+    if (filtered.length === 0) {
+        const emptyMsg = state.mode === 'wrong'
+            ? '太棒了！目前沒有答錯的題目 🎉'
+            : '目前還沒有收藏任何題目，點擊題目右上角的「☆ 收藏此題」即可加入複習清單！';
+        container.innerHTML = `
+            <div class="question-card" style="text-align:center; padding: 40px 20px;">
+                <p style="font-size:1.1rem; font-weight:600; color:var(--text-muted);">${emptyMsg}</p>
+                <button class="btn btn-mint" style="margin-top:16px;" onclick="setMode('single')">回到單題練習</button>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = filtered.map(q => createQuestionCardHTML(q, false)).join('');
+}
+
+// 處理作答點擊
+function handleSelectOption(questionId, optionIndex) {
+    // 若已作答則不重複覆蓋（避免誤觸，若想重做可按重置或重新點選）
+    if (state.userAnswers[questionId] !== undefined) return;
+
+    state.userAnswers[questionId] = optionIndex;
+    saveState();
+    updateStats();
+
+    if (state.mode === 'single') {
+        renderSingleQuestion();
+    } else {
+        // 局部更新該題卡片以保持捲動位置
+        const q = quizData.find(item => item.id === questionId);
+        const cardEl = document.getElementById(`q-card-${questionId}`);
+        if (cardEl && q) {
+            cardEl.outerHTML = createQuestionCardHTML(q, false);
+        }
+    }
+}
+
+// 單題模式下手動開關解析
+function toggleSingleExp(questionId) {
+    const expEl = document.getElementById(`exp-${questionId}`);
+    if (expEl) {
+        expEl.classList.toggle('show');
+    }
+}
+
+// 全卷模式下展開/收合全部解析
+function toggleAllExplanations() {
+    state.showAllExp = !state.showAllExp;
+    renderListQuestions();
+}
+
+// 收藏切換
+function toggleBookmark(questionId) {
+    const idx = state.bookmarks.indexOf(questionId);
+    if (idx > -1) {
+        state.bookmarks.splice(idx, 1);
+    } else {
+        state.bookmarks.push(questionId);
+    }
+    saveState();
+    updateStats();
+
+    if (state.mode === 'single') {
+        renderSingleQuestion();
+    } else {
+        renderListQuestions();
+    }
+}
+
+// 上一題 / 下一題 / 跳題
+function prevQuestion() {
+    if (state.currentIndex > 0) {
+        state.currentIndex--;
+        saveState();
+        renderSingleQuestion();
+    }
+}
+
+function nextQuestion() {
+    if (state.currentIndex < quizData.length - 1) {
+        state.currentIndex++;
+        saveState();
+        renderSingleQuestion();
+    }
+}
+
+function jumpToQuestion(index) {
+    state.currentIndex = index;
+    saveState();
+    if (state.mode !== 'single') {
+        setMode('single');
+    } else {
+        renderSingleQuestion();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 渲染底部 1-55 題快速導覽網格
+function renderNavigatorGrid() {
+    const grid = document.getElementById('q-grid');
+    grid.innerHTML = quizData.map((q, idx) => {
+        const userAns = state.userAnswers[q.id];
+        let statusClass = '';
+        if (userAns !== undefined) {
+            statusClass = userAns === q.answer ? 'answered-correct' : 'answered-wrong';
+        }
+        const currentClass = (state.mode === 'single' && idx === state.currentIndex) ? 'current' : '';
+        const bookmarkClass = state.bookmarks.includes(q.id) ? 'is-bookmarked' : '';
+
+        return `
+            <button class="grid-item ${statusClass} ${currentClass} ${bookmarkClass}" onclick="jumpToQuestion(${idx})">
+                ${q.id}
+            </button>
+        `;
+    }).join('');
+}
+
+// 重置紀錄
+function resetProgress() {
+    if (confirm('確定要清除所有作答紀錄與分數統計嗎？（收藏題目將會保留）')) {
+        state.userAnswers = {};
+        state.currentIndex = 0;
+        saveState();
+        updateStats();
+        if (state.mode === 'single') {
+            renderSingleQuestion();
+        } else {
+            renderListQuestions();
+        }
+    }
+}
+
+// 鍵盤左右鍵支援（電腦版方便刷題）
+document.addEventListener('keydown', (e) => {
+    if (state.mode === 'single') {
+        if (e.key === 'ArrowLeft') prevQuestion();
+        if (e.key === 'ArrowRight') nextQuestion();
+    }
+});
+
+// 啟動初始化
+loadState();
+updateStats();
+renderSingleQuestion();
+</script>
+
+</body>
+</html>
